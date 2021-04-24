@@ -1,0 +1,8 @@
+node_modules
+coverage
+.next
+.history
+.vscode
+.gitignore
+/app
+/dist
