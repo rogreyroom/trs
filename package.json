@@ -14,8 +14,12 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "electron-serve": "^1.1.0",
-    "electron-store": "^7.0.2"
+    "electron-store": "^7.0.2",
+    "express": "^4.17.1",
+    "helmet": "^4.5.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^7.30.4",
