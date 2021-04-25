@@ -50,10 +50,7 @@ module.exports = {
         },
       },
     ],
-    'import/no-extraneous-dependencies': [
-      'error',
-      { devDependencies: ['jest.setup.ts', '**/*.test.tsx', '**/*.spec.tsx', '**/*.test.ts', '**/*.spec.ts'] },
-    ],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
   },
   settings: {
     react: {
