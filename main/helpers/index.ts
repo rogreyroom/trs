@@ -1,5 +1,4 @@
 import createWindow from './create-window';
 
-export {
-  createWindow,
-};
+// eslint-disable-next-line import/prefer-default-export
+export { createWindow };
