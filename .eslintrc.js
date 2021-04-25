@@ -51,6 +51,8 @@ module.exports = {
       },
     ],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'no-use-before-define': [0],
+    '@typescript-eslint/no-use-before-define': [1],
   },
   settings: {
     react: {
