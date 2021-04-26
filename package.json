@@ -19,7 +19,8 @@
     "electron-store": "^7.0.2",
     "express": "^4.17.1",
     "helmet": "^4.5.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "nedb-async": "^0.1.6"
   },
   "devDependencies": {
     "@testing-library/dom": "^7.30.4",
