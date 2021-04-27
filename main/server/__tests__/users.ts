@@ -1,8 +1,9 @@
 import readDatabases from '../db/actions/read';
 
 interface UserTypes {
-  name: string;
-  password: string;
+  doc: string;
+  user: string;
+  passwordHash: string;
   fullName: string;
   _id: string;
 }
@@ -11,7 +12,7 @@ beforeEach(() => {
   process.env.NODE_ENV = 'test';
 });
 
-describe('Find user by name', () => {
+describe('Find user by user name', () => {
   // For simplicity run ones generalDbAction tests and the this one.
   // Just to have: name: 'user' === null; name: 'updated user' !== null
 

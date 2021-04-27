@@ -2,8 +2,9 @@ import AsyncNedb from 'nedb-async';
 import getDbConnection from '../connection';
 
 interface UserTypes {
-  name: string;
-  password: string;
+  doc: string;
+  user: string;
+  passwordHash: string;
   fullName: string;
   _id: string;
 }

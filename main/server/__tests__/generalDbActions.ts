@@ -4,9 +4,10 @@ import getDbConnection from '../db/connection';
 const db: AsyncNedb<unknown> = getDbConnection('users');
 
 interface DataType {
+  doc?: string;
   user?: string;
-  name?: string;
   passwordHash?: string;
+  fullName?: string;
 }
 interface RecordType extends DataType {
   _id: string;
@@ -35,7 +36,7 @@ describe('When calling DB for the second and more times', () => {
 });
 
 describe('Inserting records', () => {
-  const dummyData: DataType = { user: 'test', name: 'test name', passwordHash: 'passwordStringHash' };
+  const dummyData: DataType = { doc: 'users', user: 'test', fullName: 'test name', passwordHash: 'passwordStringHash' };
 
   it('should add 1 record with dummyData', async () => {
     await db.asyncInsert(dummyData);
@@ -83,7 +84,7 @@ describe('Finding records', () => {
 describe('Updating records', () => {
   const newData: DataType = {
     user: 'updated test',
-    name: 'updated test name',
+    fullName: 'updated test name',
     passwordHash: 'passwordStringHash',
   };
 
@@ -94,6 +95,6 @@ describe('Updating records', () => {
     await db.asyncUpdate({ _id: firstRecordId }, { $set: { ...newData } });
     const updatedRecord: RecordType = await db.asyncFindOne({ _id: firstRecordId });
 
-    expect(updatedRecord).toMatchObject({ ...newData, _id: firstRecordId });
+    expect(updatedRecord).toMatchObject({ doc: 'users', ...newData, _id: firstRecordId });
   });
 });
