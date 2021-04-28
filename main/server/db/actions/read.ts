@@ -1,18 +1,11 @@
 import AsyncNedb from 'nedb-async';
 import getDbConnection from '../connection';
-
-interface UserTypes {
-  doc: string;
-  user: string;
-  passwordHash: string;
-  fullName: string;
-  _id: string;
-}
+import { IUser } from './_types';
 
 const readDatabases = {
-  GET_USER_BY_NAME: async (name: string): Promise<UserTypes> => {
-    const usersDB: AsyncNedb<unknown> = await getDbConnection('users');
-    const userData: UserTypes = await usersDB.asyncFindOne({ user: name });
+  GET_USER_BY_NAME: async (name: string): Promise<IUser> => {
+    const usersDB: AsyncNedb<IUser> = await getDbConnection('users');
+    const userData: IUser = await usersDB.asyncFindOne({ user: name });
     return userData;
   },
 };
