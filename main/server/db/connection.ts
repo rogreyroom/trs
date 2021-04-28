@@ -23,15 +23,10 @@ const getDbConnection = (name: string): AsyncNedb<unknown> => {
     dbName = `${name}.db`;
   }
 
-  switch (name) {
-    case 'users':
-      return new AsyncNedb({
-        filename: path.join(dbDirectory, dbName),
-        autoload: true,
-      });
-    default:
-      break;
-  }
+  return new AsyncNedb({
+    filename: path.join(dbDirectory, dbName),
+    autoload: true,
+  });
 };
 
 export default getDbConnection;
