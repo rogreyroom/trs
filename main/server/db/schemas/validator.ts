@@ -1,7 +1,7 @@
 import Joi from 'joi';
-import { IEes, IValidation, IDbOperationResult } from '../actions/_types';
+import { IValidation, IDbOperationResult, IEes, IPublicHolidays } from '../actions/_types';
 
-const schemaValidator = (schema: Joi.ObjectSchema, data: IEes): IDbOperationResult => {
+const schemaValidator = (schema: Joi.ObjectSchema, data: IEes | IPublicHolidays): IDbOperationResult => {
   if (schema && data) {
     const validationResult: IValidation = schema.validate(data);
     if (validationResult.error) {
