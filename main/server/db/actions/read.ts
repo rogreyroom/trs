@@ -1,6 +1,6 @@
 import AsyncNedb from 'nedb-async';
 import getDbConnection from '../connection';
-import { IUser, IEes } from './_types';
+import { IUser, IEes, IPublicHolidays } from './_types';
 
 const readDatabases = {
   GET_USER_BY_NAME: async (name: string): Promise<IUser> => {
@@ -19,6 +19,12 @@ const readDatabases = {
     const eesDB: AsyncNedb<IEes> = await getDbConnection('ees');
     const eesData: IEes = await eesDB.asyncFindOne({ _id: id });
     return eesData;
+  },
+
+  GET_PUBLIC_HOLIDAYS_DATA_BY_YEAR: async (theYear: number): Promise<IPublicHolidays> => {
+    const holidaysDB: AsyncNedb<IPublicHolidays> = await getDbConnection('holidays');
+    const holidaysData: IPublicHolidays = await holidaysDB.asyncFindOne({ year: theYear });
+    return holidaysData;
   },
 };
 
