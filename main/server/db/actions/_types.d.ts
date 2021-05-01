@@ -12,5 +12,15 @@ export interface IEes {
   symbol: string;
   percent: string;
   description: string;
-  _id: string;
+  _id?: string;
+}
+
+export interface IValidation {
+  value?: IEes;
+  error?: Error;
+}
+
+export interface IDbOperationResult {
+  status: boolean;
+  value: IEes | string;
 }
