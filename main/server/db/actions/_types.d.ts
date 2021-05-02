@@ -38,3 +38,10 @@ export interface IPublicHolidays {
   publicHolidays: Array<IPublicHolidaysItem>;
   _id?: string;
 }
+
+export interface IResponsibilities {
+  doc: string;
+  employee: string;
+  text: string;
+  _id?: string;
+}
