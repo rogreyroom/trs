@@ -45,3 +45,73 @@ export interface IResponsibilities {
   text: string;
   _id?: string;
 }
+
+export interface IDate {
+  day: number;
+  month: number;
+  year: number;
+}
+
+export interface IDateRange {
+  from: IDate;
+  to: IDate;
+}
+
+export interface IEvaluationData {
+  name: string;
+  description: string;
+  percent: number;
+}
+
+export interface IRtsData {
+  workingHours: number;
+  overtimeHours: number;
+  weekendHours: number;
+  dueDate: IDate;
+  evaluation: [IEvaluationData];
+}
+
+export interface IMonthRates {
+  month: number;
+  hourlyRate: number;
+  overtimeRate: number;
+  holidayRate: number;
+  sickLeaveRate: number;
+  otherLeaveRate: number;
+  insuranceRate: number;
+  retainmentRate: number;
+  bonusRate: number;
+  toAccountRate: number;
+  overtimeRateMultiplier: number;
+  overtimeHoursMultiplier: number;
+}
+
+export interface IMonthData extends IMonthRates {
+  holidayLeave: [IDateRange] | [];
+  sickLeave: [IDateRange] | [];
+  otherLeave: [IDateRange] | [];
+  rts: [IRtsData] | [];
+}
+
+export interface IYearData {
+  year: number;
+  months: [IMonthData];
+}
+
+export interface IBasicEmployeeData {
+  doc: string;
+  name: string;
+  surname: string;
+  position: string;
+  juvenileWorker: boolean;
+  employmentStatus: boolean;
+  overdueLeaveAmount: number;
+  assignedLeaveAmount: number;
+  employmentStartDate: IDate;
+  employmentTerminationDate: IDate | null;
+  _id?: string;
+}
+
+export interface IEmployeesData extends IBasicEmployeeData {
+  calendar: [IYearData];
+}
