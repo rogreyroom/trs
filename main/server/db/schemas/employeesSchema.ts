@@ -7,8 +7,8 @@ export const dateSchema = Joi.object().keys({
 });
 
 export const dateRangeSchema = Joi.object().keys({
-  from: dateSchema.required(),
-  to: dateSchema.required(),
+  from: dateSchema.required().error(new Error(`Data range from is required!`)),
+  to: dateSchema.required().error(new Error(`Data range to is required!`)),
 });
 
 export const evaluationSchema = Joi.object().keys({
@@ -45,15 +45,17 @@ export const monthRatesSchema = Joi.object().keys({
 });
 
 export const monthSchema = monthRatesSchema.keys({
-  holidayLeave: Joi.array().items(dateRangeSchema),
-  sickLeave: Joi.array().items(dateRangeSchema),
-  otherLeave: Joi.array().items(dateRangeSchema),
-  rts: Joi.array().items(rtsSchema),
+  holidayLeave: Joi.array().items(dateRangeSchema).default([]),
+  sickLeave: Joi.array().items(dateRangeSchema).default([]),
+  otherLeave: Joi.array().items(dateRangeSchema).default([]),
+  rts: Joi.array().items(rtsSchema).default([]),
 });
 
 export const yearSchema = Joi.object().keys({
   year: Joi.number().required().error(new Error(`Year is required and should be a number!`)),
-  months: Joi.array().items(monthSchema),
+  months: Joi.array().items(
+    monthSchema.required().error(new Error(`Months array is required and should be a number!`))
+  ),
 });
 
 export const basicEmployeeSchema = Joi.object().keys({
