@@ -22,7 +22,8 @@ export interface IValidation {
 
 export interface IDbOperationResult {
   status: boolean;
-  value: IEes | string;
+  message: string;
+  value?: IEes | IUser | IPublicHolidays | IResponsibilities | IEmployeesData | IBasicEmployeeData | number | null;
 }
 
 export interface IPublicHolidaysItem {
@@ -63,12 +64,12 @@ export interface IEvaluationData {
   percent: number;
 }
 
-export interface IRtsData {
+export interface ITrsData {
   workingHours: number;
   overtimeHours: number;
   weekendHours: number;
   dueDate: IDate;
-  evaluation: [IEvaluationData];
+  evaluation: [IEvaluationData] | [];
 }
 
 export interface IMonthRates {
@@ -90,12 +91,12 @@ export interface IMonthData extends IMonthRates {
   holidayLeave: [IDateRange] | [];
   sickLeave: [IDateRange] | [];
   otherLeave: [IDateRange] | [];
-  rts: [IRtsData] | [];
+  rts: [ITrsData] | [];
 }
 
 export interface IYearData {
   year: number;
-  months: [IMonthData];
+  months: IMonthData[];
 }
 
 export interface IBasicEmployeeData {
@@ -114,4 +115,10 @@ export interface IBasicEmployeeData {
 
 export interface IEmployeesData extends IBasicEmployeeData {
   calendar: [IYearData];
+}
+
+export interface IQueryFields {
+  name: string;
+  year: number;
+  month: number;
 }
