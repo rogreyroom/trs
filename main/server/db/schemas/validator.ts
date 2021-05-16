@@ -1,19 +1,40 @@
 import Joi from 'joi';
-import { IValidation, IDbOperationResult, IEes, IPublicHolidays, IResponsibilities } from '../actions/_types';
+import {
+  IValidation,
+  IDbOperationResult,
+  IEes,
+  IPublicHolidays,
+  IResponsibilities,
+  IEmployeesData,
+  IBasicEmployeeData,
+  IMonthRates,
+  IDateRange,
+  ITrsData,
+  IYearData,
+} from '../actions/_types';
 
 const schemaValidator = (
   schema: Joi.ObjectSchema,
-  data: IEes | IPublicHolidays | IResponsibilities
+  data:
+    | IEes
+    | IPublicHolidays
+    | IResponsibilities
+    | IEmployeesData
+    | IBasicEmployeeData
+    | IMonthRates
+    | IDateRange
+    | ITrsData
+    | IYearData
 ): IDbOperationResult => {
   if (schema && data) {
     const validationResult: IValidation = schema.validate(data);
     if (validationResult.error) {
-      return { status: false, value: validationResult.error.message };
+      return { status: false, message: validationResult.error.message };
     }
-    return { status: true, value: validationResult.value };
+    return { status: true, message: 'Schema is OK!', value: validationResult.value };
   }
 
-  return { status: false, value: new Error(`Schema and/or data not found!`).message };
+  return { status: false, message: new Error(`Schema and/or data not found!`).message };
 };
 
 export default schemaValidator;
