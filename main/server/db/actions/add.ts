@@ -3,8 +3,9 @@ import getDbConnection from '../connection';
 import holidaysSchema from '../schemas/holidaysSchema';
 import responsibilitiesSchema from '../schemas/responsibilitiesSchema';
 import schemaValidator from '../schemas/validator';
-import { IDbOperationResult, IPublicHolidays, IResponsibilities } from './_types';
+import { IDbOperationResult, IEmployeesData, IPublicHolidays, IResponsibilities } from './_types';
 import readDatabases from './read';
+import { checkEmployeeExist } from './utils';
 
 const addDatabases = {
   ADD_PUBLIC_HOLIDAYS_DATA: async (holidaysData: IPublicHolidays): Promise<IDbOperationResult> => {
@@ -40,6 +41,16 @@ const addDatabases = {
     const responsibilitiesDB: AsyncNedb<IResponsibilities> = await getDbConnection('responsibilities');
     const addResult = responsibilitiesDB && (await responsibilitiesDB.asyncInsert(responsibilitiesData));
     return addResult && { status: true, value: 'Adding successful!' };
+  },
+
+  ADD_EMPLOYEE_DATA: async (employeeData: IEmployeesData): Promise<IDbOperationResult> => {
+    const { name, surname } = employeeData;
+    const checkEmployee = await checkEmployeeExist({ name, surname });
+    if (checkEmployee.status) return checkEmployee;
+
+    const employeesDB: AsyncNedb<IEmployeesData> = await getDbConnection('employees');
+    const addResult = employeesDB && (await employeesDB.asyncInsert(employeeData));
+    return addResult && { status: true, message: 'The employee was added!', value: addResult };
   },
 };
 
