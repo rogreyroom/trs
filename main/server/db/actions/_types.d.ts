@@ -69,7 +69,7 @@ export interface ITrsData {
   overtimeHours: number;
   weekendHours: number;
   dueDate: IDate;
-  evaluation: [IEvaluationData] | [];
+  evaluation: IEvaluationData[] | [];
 }
 
 export interface IMonthRates {
@@ -88,10 +88,10 @@ export interface IMonthRates {
 }
 
 export interface IMonthData extends IMonthRates {
-  holidayLeave: [IDateRange] | [];
-  sickLeave: [IDateRange] | [];
-  otherLeave: [IDateRange] | [];
-  rts: [ITrsData] | [];
+  holidayLeave: IDateRange[] | [];
+  sickLeave: IDateRange[] | [];
+  otherLeave: IDateRange[] | [];
+  rts: ITrsData[] | [];
 }
 
 export interface IYearData {
@@ -114,7 +114,7 @@ export interface IBasicEmployeeData {
 }
 
 export interface IEmployeesData extends IBasicEmployeeData {
-  calendar: [IYearData];
+  calendar: IYearData[];
 }
 
 export interface IQueryFields {
