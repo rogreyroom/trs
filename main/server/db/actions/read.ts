@@ -1,6 +1,6 @@
 import AsyncNedb from 'nedb-async';
 import getDbConnection from '../connection';
-import { IUser, IEes, IPublicHolidays, IResponsibilities } from './_types';
+import { IUser, IEes, IPublicHolidays, IResponsibilities, IEmployeesData } from './_types';
 
 const readDatabases = {
   GET_USER_BY_NAME: async (name: string): Promise<IUser> => {
@@ -31,6 +31,24 @@ const readDatabases = {
     const responsibilitiesDB: AsyncNedb<IResponsibilities> = await getDbConnection('responsibilities');
     const responsibilitiesData: IResponsibilities = await responsibilitiesDB.asyncFindOne({ employee: employeeId });
     return responsibilitiesData;
+  },
+
+  GET_ALL_EMPLOYEES_DATA: async (): Promise<IEmployeesData[]> => {
+    const employeesDB: AsyncNedb<IEmployeesData> = await getDbConnection('employees');
+    const employeesData: IEmployeesData[] = await employeesDB.asyncFind({});
+    return employeesData;
+  },
+
+  GET_EMPLOYEE_DATA_BY_ID: async (id: string): Promise<IEmployeesData> => {
+    const employeesDB: AsyncNedb<IEmployeesData> = await getDbConnection('employees');
+    const employeeData: IEmployeesData = await employeesDB.asyncFindOne({ _id: id });
+    return employeeData;
+  },
+
+  GET_EMPLOYEE_DATA_BY_NAME: async (theName: string, theSurname: string): Promise<IEmployeesData> => {
+    const employeesDB: AsyncNedb<IEmployeesData> = await getDbConnection('employees');
+    const employeeData: IEmployeesData = await employeesDB.asyncFindOne({ name: theName, surname: theSurname });
+    return employeeData;
   },
 };
 
