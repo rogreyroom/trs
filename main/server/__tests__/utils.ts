@@ -4,6 +4,7 @@ import {
   checkEmployeeExist,
   checkExistingLeaveData,
   checkHolidaysExist,
+  checkResponsibilitiesExist,
   createLeaveUpdateData,
   getCalendarMonthIndex,
   getCalendarRtsDayIndex,
@@ -407,5 +408,22 @@ describe('Check if public holidays exist', () => {
     const result = await checkHolidaysExist(falsyYear);
     expect(result.message).toEqual('The public holidays does not exist!');
     expect(result.status).toBeFalsy();
+  });
+});
+
+describe('Check if public responsibilities exist', () => {
+  const truthyId = '111';
+  const falsyId = '333';
+
+  it('should return status true and massage "The responsibilities for the given employee does exist!" if responsibilities exists in the responsibilities database when calling with employee ID', async () => {
+    const result = await checkResponsibilitiesExist(truthyId);
+    expect(result.message).toEqual('The responsibilities for the given employee does exist!');
+    expect(result.status).toBeTruthy();
+  });
+
+  it('should return status false and massage "The responsibilities does not exist!" if responsibilities do not exists in the responsibilities database when calling with employee ID', async () => {
+    const result = await checkResponsibilitiesExist(falsyId);
+    expect(result.message).toEqual('The responsibilities for the given employee does not exist!');
+    expect(result.status).toBeTruthy();
   });
 });
