@@ -154,3 +154,9 @@ export const checkEesExist = async (eesInput: ICheckEesInput): Promise<IDbOperat
   if (eesData !== null) return { status: true, message: 'The ees does exist!', value: eesData };
   return { status: false, message: 'The ees does not exist!', value: null };
 };
+
+export const checkHolidaysExist = async (year: number): Promise<IDbOperationResult> => {
+  const holidaysData = await readDatabases.GET_PUBLIC_HOLIDAYS_DATA_BY_YEAR(year);
+  if (holidaysData !== null) return { status: true, message: 'The public holidays does exist!', value: holidaysData };
+  return { status: false, message: 'The public holidays does not exist!', value: null };
+};
