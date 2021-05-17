@@ -1,17 +1,19 @@
 import { AsyncNedb } from 'nedb-async';
 import getDbConnection from '../db/connection';
 
-const db: AsyncNedb<unknown> = getDbConnection('users');
+const db: AsyncNedb<unknown> = getDbConnection('test');
 
 interface DataType {
-  doc?: string;
+  test?: string;
   user?: string;
-  passwordHash?: string;
-  fullName?: string;
 }
 interface RecordType extends DataType {
   _id: string;
 }
+
+beforeAll(async () => {
+  await db.asyncRemove({}, { multi: true });
+});
 
 beforeEach(() => {
   process.env.NODE_ENV = 'test';
@@ -28,15 +30,16 @@ describe('When calling DB for the first time', () => {
   });
 });
 
-describe('When calling DB for the second and more times', () => {
+describe('When DB have some  data', () => {
   it('should return more then 0 records', async () => {
+    await db.asyncInsert({ test: 'test data' });
     const records: RecordType[] = await db.asyncFind({});
     expect(records.length).toBeGreaterThan(0);
   });
 });
 
 describe('Inserting records', () => {
-  const dummyData: DataType = { doc: 'users', user: 'test', fullName: 'test name', passwordHash: 'passwordStringHash' };
+  const dummyData: DataType = { user: 'test' };
 
   it('should add 1 record with dummyData', async () => {
     await db.asyncInsert(dummyData);
@@ -54,7 +57,7 @@ describe('Inserting records', () => {
   it('should have user equal to "test" on last record', async () => {
     const records: RecordType[] = await db.asyncFind({});
     const lastRecord: number = records.length - 1;
-    expect(records[lastRecord].user).toEqual('test');
+    expect(records[lastRecord].test).toEqual('test data');
   });
 });
 
@@ -84,8 +87,6 @@ describe('Finding records', () => {
 describe('Updating records', () => {
   const newData: DataType = {
     user: 'updated test',
-    fullName: 'updated test name',
-    passwordHash: 'passwordStringHash',
   };
 
   it('should update first record', async () => {
@@ -95,6 +96,6 @@ describe('Updating records', () => {
     await db.asyncUpdate({ _id: firstRecordId }, { $set: { ...newData } });
     const updatedRecord: RecordType = await db.asyncFindOne({ _id: firstRecordId });
 
-    expect(updatedRecord).toMatchObject({ doc: 'users', ...newData, _id: firstRecordId });
+    expect(updatedRecord).toMatchObject({ ...newData, _id: firstRecordId });
   });
 });
