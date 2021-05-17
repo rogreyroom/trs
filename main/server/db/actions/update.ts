@@ -16,6 +16,7 @@ import {
 } from './_types';
 import readDatabases from './read';
 import {
+  checkEesExist,
   checkEmployeeExist,
   checkExistingLeaveData,
   createLeaveUpdateData,
@@ -26,15 +27,14 @@ import {
 } from './utils';
 
 const updateDatabases = {
-  UPDATE_EES_DATA_BY_ID: async (id: string, data: IEes): Promise<IDbOperationResult> => {
+  UPDATE_EES_DATA_BY_SYMBOL: async (symbol: string, data: IEes): Promise<IDbOperationResult> => {
+    const checkEes = await checkEesExist({ symbol });
+    if (!checkEes.status) return checkEes;
+
     const eesDB: AsyncNedb<IEes> = await getDbConnection('ees');
-    const validation = schemaValidator(eesSchema, data);
-
-    if (!validation.status) return { ...validation };
-
-    const updateResult = eesDB && (await eesDB.asyncUpdate({ _id: id }, { $set: { ...data } }));
-    if (updateResult === 0) return { status: false, value: 'Update failed!' };
-    return { status: true, value: 'Update successful!' };
+    const updateResult = eesDB && ((await eesDB.asyncUpdate({ symbol }, { $set: { ...data } })) as number);
+    if (updateResult === 0) return { status: false, message: 'The ees data was not updated!', value: null };
+    return { status: true, message: 'The ees data was updated!', value: updateResult };
   },
 
   UPDATE_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID: async (
