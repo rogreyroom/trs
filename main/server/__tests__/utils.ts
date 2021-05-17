@@ -3,6 +3,7 @@ import {
   checkEesExist,
   checkEmployeeExist,
   checkExistingLeaveData,
+  checkHolidaysExist,
   createLeaveUpdateData,
   getCalendarMonthIndex,
   getCalendarRtsDayIndex,
@@ -388,6 +389,23 @@ describe('Check if ees exist', () => {
   it('should return status false and massage "The ees does not exist!" if ees do not exists in the ees database when calling with ees SYMBOL', async () => {
     const result = await checkEesExist({ symbol: falsySymbol });
     expect(result.message).toEqual('The ees does not exist!');
+    expect(result.status).toBeFalsy();
+  });
+});
+
+describe('Check if public holidays exist', () => {
+  const truthyYear = 2021;
+  const falsyYear = 2035;
+
+  it('should return status true and massage "The public holidays does exist!" if holidays exists in the holidays database when calling with holidays YEAR', async () => {
+    const result = await checkHolidaysExist(truthyYear);
+    expect(result.message).toEqual('The public holidays does exist!');
+    expect(result.status).toBeTruthy();
+  });
+
+  it('should return status false and massage "The public holidays does not exist!" if holidays do not exists in the holidays database when calling with holidays YEAR', async () => {
+    const result = await checkHolidaysExist(falsyYear);
+    expect(result.message).toEqual('The public holidays does not exist!');
     expect(result.status).toBeFalsy();
   });
 });
