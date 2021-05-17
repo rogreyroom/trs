@@ -3,11 +3,21 @@ import getDbConnection from '../connection';
 import holidaysSchema from '../schemas/holidaysSchema';
 import responsibilitiesSchema from '../schemas/responsibilitiesSchema';
 import schemaValidator from '../schemas/validator';
-import { IDbOperationResult, IEmployeesData, IPublicHolidays, IResponsibilities } from './_types';
+import { IDbOperationResult, IEes, IEmployeesData, IPublicHolidays, IResponsibilities } from './_types';
 import readDatabases from './read';
-import { checkEmployeeExist } from './utils';
+import { checkEesExist, checkEmployeeExist } from './utils';
 
 const addDatabases = {
+  ADD_EES_DATA: async (eesData: IEes): Promise<IDbOperationResult> => {
+    const { symbol } = eesData;
+    const checkEes = await checkEesExist({ symbol });
+    if (checkEes.status) return checkEes;
+
+    const eesDB: AsyncNedb<IEes> = await getDbConnection('ees');
+    const addResult = eesDB && (await eesDB.asyncInsert(eesData));
+    return addResult && { status: true, message: 'The ees data was added!', value: addResult };
+  },
+
   ADD_PUBLIC_HOLIDAYS_DATA: async (holidaysData: IPublicHolidays): Promise<IDbOperationResult> => {
     const { year } = holidaysData;
     if (typeof year === 'undefined') return { status: false, value: `Year was not specify!` };
