@@ -1,5 +1,6 @@
 import { IDate, IDateRange, IEmployeesData, IMonthRates } from '../db/actions/_types';
 import {
+  checkEesExist,
   checkEmployeeExist,
   checkExistingLeaveData,
   createLeaveUpdateData,
@@ -371,5 +372,22 @@ describe('Create calendar data object', () => {
     expect(result.year).toEqual(2022);
     expect(result.months).toHaveLength(12);
     expect(result.months[11]).toStrictEqual({ ...ratesData, holidayLeave: [], sickLeave: [], otherLeave: [], rts: [] });
+  });
+});
+
+describe('Check if ees exist', () => {
+  const truthySymbol = '4H';
+  const falsySymbol = '3GGG';
+
+  it('should return status true and massage "The ees does exist!" if ees exists in the ees database when calling with ees SYMBOL', async () => {
+    const result = await checkEesExist({ symbol: truthySymbol });
+    expect(result.message).toEqual('The ees does exist!');
+    expect(result.status).toBeTruthy();
+  });
+
+  it('should return status false and massage "The ees does not exist!" if ees do not exists in the ees database when calling with ees SYMBOL', async () => {
+    const result = await checkEesExist({ symbol: falsySymbol });
+    expect(result.message).toEqual('The ees does not exist!');
+    expect(result.status).toBeFalsy();
   });
 });
