@@ -1,80 +1,102 @@
+import AsyncNedb from 'nedb-async';
 import { IEes } from '../db/actions/_types';
+import addDatabases from '../db/actions/add';
 import readDatabases from '../db/actions/read';
 import updateDatabases from '../db/actions/update';
-import eesSchema from '../db/schemas/eesSchema';
-import schemaValidator from '../db/schemas/validator';
+import getDbConnection from '../db/connection';
+
+beforeAll(async () => {
+  const eesDB: AsyncNedb<IEes> = await getDbConnection('ees');
+  await eesDB.asyncRemove({}, { multi: true });
+});
 
 beforeEach(() => {
   process.env.NODE_ENV = 'test';
 });
 
-describe('Find all ees data', () => {
-  it('should be empty array if ees data do not exist', async () => {
-    const eesData: IEes[] = await readDatabases.GET_ALL_EES_DATA();
-    expect(eesData).toEqual([]);
+// ADD
+describe('Adding a new ees  (employee evaluation system)', () => {
+  const randomSymbol = Math.random().toString();
+  const exampleAddEesData: IEes = {
+    doc: 'ees',
+    type: 'task-oriented',
+    countType: 'auto',
+    symbol: randomSymbol,
+    percent: '25',
+    description: 'pracownik przepracuję dwie soboty w miesiącu lub podczas dwóch weekendów osiągnie stan 12 godzin',
+  };
+
+  const symbolTestAddEesData: IEes = {
+    doc: 'ees',
+    type: 'task-oriented',
+    countType: 'auto',
+    symbol: '4H',
+    percent: '25',
+    description: 'pracownik przepracuję dwie soboty w miesiącu lub podczas dwóch weekendów osiągnie stan 12 godzin',
+  };
+
+  it('it should be successful if symbolTestAddEesData symbol does not exists and new ees was added to DB (it is hardcoded data it will PASS only once when DB is empty)', async () => {
+    const result = await addDatabases.ADD_EES_DATA(symbolTestAddEesData);
+    expect(result.message).toEqual('The ees data was added!');
+    expect(result.status).toBeTruthy();
+    expect(result.value).toEqual(expect.objectContaining({ symbol: '4H' }));
   });
 
-  it('should return array of objects if ees data exist', async () => {
-    const eesData: IEes[] = await readDatabases.GET_ALL_EES_DATA();
-    expect(eesData.length).toBeGreaterThan(0);
+  it('it should be successful if ees symbol does not exists and new ees was added to DB', async () => {
+    const result = await addDatabases.ADD_EES_DATA(exampleAddEesData);
+    expect(result.message).toEqual('The ees data was added!');
+    expect(result.status).toBeTruthy();
+    expect(result.value).toEqual(expect.objectContaining({ symbol: randomSymbol }));
+  });
+
+  it('it should be unsuccessful if ees symbol does exists and new ees was not added to DB', async () => {
+    const result = await addDatabases.ADD_EES_DATA(symbolTestAddEesData);
+    expect(result.message).toEqual('The ees does exist!');
+    expect(result.status).toBeTruthy();
+    expect(result.value).toEqual(expect.objectContaining({ symbol: '4H' }));
   });
 });
 
-describe('Find ees data by ees id', () => {
-  it('it should be null if ees do not exist', async () => {
-    const firstEesDataId = '0';
-    const singleEesData: IEes = await readDatabases.GET_EES_DATA_BY_ID(firstEesDataId);
-    expect(singleEesData).toBeNull();
+// FIND
+describe('Finding ees (employee evaluation system)', () => {
+  const symbol = '4H';
+
+  it('it should be successful if eesArray length is greater than 0', async () => {
+    const eesArray = await readDatabases.GET_ALL_EES_DATA();
+    expect(eesArray.length).toBeGreaterThan(0);
   });
 
-  it('should return first object from database', async () => {
-    const eesData: IEes[] = await readDatabases.GET_ALL_EES_DATA();
-    // eslint-disable-next-line no-underscore-dangle
-    const firstEesDataId = eesData[0]?._id;
-
-    const singleEesData: IEes = await readDatabases.GET_EES_DATA_BY_ID(firstEesDataId);
-    expect(singleEesData).not.toBeNull();
-    expect(singleEesData).toEqual(expect.objectContaining({ _id: firstEesDataId }));
+  it('it should be successful if eesData object has doc key equal "ees" and symbol equal "symbol = 4H"', async () => {
+    const eesData = await readDatabases.GET_EES_DATA_BY_SYMBOL(symbol);
+    expect(eesData).toEqual(expect.objectContaining({ doc: 'ees' }));
+    expect(eesData).toEqual(expect.objectContaining({ symbol: '4H' }));
   });
 });
 
-describe('Validate data and update ees data by id', () => {
+// UPDATE
+describe('Updating ees (employee evaluation system)', () => {
+  const truthySymbol = '4H';
+  const falsySymbol = '333PQ';
   const updatedEesData: IEes = {
     doc: 'ees',
     type: 'task-oriented',
     countType: 'auto',
-    symbol: '4HHHH',
-    percent: '250',
+    symbol: '4H',
+    percent: '150',
     description: 'pracownik przepracuję dwie soboty w miesiącu lub podczas dwóch weekendów osiągnie stan 12 godzin',
   };
 
-  it('should return error massage if validation fails', () => {
-    const validation = schemaValidator(eesSchema, { doc: 'fake' });
-    expect(validation.status).toBeFalsy();
-  });
-
-  it('should return value object if validation pass', () => {
-    const validation = schemaValidator(eesSchema, updatedEesData);
-    expect(validation.status).toBeTruthy();
-  });
-
-  it('should return status: false when document not found', async () => {
-    const result = await updateDatabases.UPDATE_EES_DATA_BY_ID('0', updatedEesData);
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Update failed!');
-  });
-
-  it('should return status: false and validation error value: Doc name is required', async () => {
-    const firstEesDataId = '94JL3S80mEfRsUl1';
-    const result = await updateDatabases.UPDATE_EES_DATA_BY_ID(firstEesDataId, {});
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Doc name is required');
-  });
-
-  it('should update ees data and return status: true and value: Update successful!', async () => {
-    const firstEesDataId = '94JL3S80mEfRsUl1';
-    const result = await updateDatabases.UPDATE_EES_DATA_BY_ID(firstEesDataId, updatedEesData);
+  it('it should be successful if given ees symbol exists and ees data was updated', async () => {
+    const result = await updateDatabases.UPDATE_EES_DATA_BY_SYMBOL(truthySymbol, updatedEesData);
+    expect(result.message).toEqual('The ees data was updated!');
     expect(result.status).toBeTruthy();
-    expect(result.value).toEqual('Update successful!');
+    expect(result.value).toEqual(1);
+  });
+
+  it('it should be unsuccessful if given ees symbol does not exists and ees data was not updated', async () => {
+    const result = await updateDatabases.UPDATE_EES_DATA_BY_SYMBOL(falsySymbol, updatedEesData);
+    expect(result.message).toEqual('The ees does not exist!');
+    expect(result.status).toBeFalsy();
+    expect(result.value).toEqual(null);
   });
 });
