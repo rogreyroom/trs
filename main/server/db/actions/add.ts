@@ -5,7 +5,7 @@ import responsibilitiesSchema from '../schemas/responsibilitiesSchema';
 import schemaValidator from '../schemas/validator';
 import { IDbOperationResult, IEes, IEmployeesData, IPublicHolidays, IResponsibilities } from './_types';
 import readDatabases from './read';
-import { checkEesExist, checkEmployeeExist, checkHolidaysExist } from './utils';
+import { checkEesExist, checkEmployeeExist, checkHolidaysExist, checkResponsibilitiesExist } from './utils';
 
 const addDatabases = {
   ADD_EES_DATA: async (eesData: IEes): Promise<IDbOperationResult> => {
@@ -31,21 +31,13 @@ const addDatabases = {
   ADD_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID: async (
     responsibilitiesData: IResponsibilities
   ): Promise<IDbOperationResult> => {
-    if (Object.keys(responsibilitiesData).length === 0 && responsibilitiesData.constructor === Object)
-      return { status: false, value: `Data was not specify!` };
     const { employee } = responsibilitiesData;
-    if (typeof employee === 'undefined') return { status: false, value: `Employee is required!` };
-
-    const getResponsibilities = await readDatabases.GET_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID(employee);
-    const responsibilitiesExists = getResponsibilities?.employee === employee;
-    if (responsibilitiesExists) return { status: false, value: 'Data exist!' };
-
-    const validation = schemaValidator(responsibilitiesSchema, responsibilitiesData);
-    if (!validation.status) return { ...validation };
+    const checkResponsibilities = await checkResponsibilitiesExist(employee);
+    if (checkResponsibilities.status) return checkResponsibilities;
 
     const responsibilitiesDB: AsyncNedb<IResponsibilities> = await getDbConnection('responsibilities');
     const addResult = responsibilitiesDB && (await responsibilitiesDB.asyncInsert(responsibilitiesData));
-    return addResult && { status: true, value: 'Adding successful!' };
+    return addResult && { status: true, message: 'The responsibilities data was added!', value: addResult };
   },
 
   ADD_EMPLOYEE_DATA: async (employeeData: IEmployeesData): Promise<IDbOperationResult> => {
