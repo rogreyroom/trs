@@ -160,3 +160,14 @@ export const checkHolidaysExist = async (year: number): Promise<IDbOperationResu
   if (holidaysData !== null) return { status: true, message: 'The public holidays does exist!', value: holidaysData };
   return { status: false, message: 'The public holidays does not exist!', value: null };
 };
+
+export const checkResponsibilitiesExist = async (employeeId: string): Promise<IDbOperationResult> => {
+  const responsibilitiesData = await readDatabases.GET_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID(employeeId);
+  if (responsibilitiesData !== null)
+    return {
+      status: true,
+      message: 'The responsibilities for the given employee does exist!',
+      value: responsibilitiesData,
+    };
+  return { status: false, message: 'The responsibilities for the given employee does not exist!', value: null };
+};
