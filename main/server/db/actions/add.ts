@@ -5,7 +5,7 @@ import responsibilitiesSchema from '../schemas/responsibilitiesSchema';
 import schemaValidator from '../schemas/validator';
 import { IDbOperationResult, IEes, IEmployeesData, IPublicHolidays, IResponsibilities } from './_types';
 import readDatabases from './read';
-import { checkEesExist, checkEmployeeExist } from './utils';
+import { checkEesExist, checkEmployeeExist, checkHolidaysExist } from './utils';
 
 const addDatabases = {
   ADD_EES_DATA: async (eesData: IEes): Promise<IDbOperationResult> => {
@@ -20,17 +20,12 @@ const addDatabases = {
 
   ADD_PUBLIC_HOLIDAYS_DATA: async (holidaysData: IPublicHolidays): Promise<IDbOperationResult> => {
     const { year } = holidaysData;
-    if (typeof year === 'undefined') return { status: false, value: `Year was not specify!` };
+    const checkHolidays = await checkHolidaysExist(year);
+    if (checkHolidays.status) return checkHolidays;
 
-    const getYear = await readDatabases.GET_PUBLIC_HOLIDAYS_DATA_BY_YEAR(year);
-    const yearExists = getYear?.year === year;
-    if (yearExists) return { status: false, value: `Data for year: ${year} already exist!` };
-
-    const validation = schemaValidator(holidaysSchema, holidaysData);
-    if (!validation.status) return { ...validation };
     const holidaysDB: AsyncNedb<IPublicHolidays> = await getDbConnection('holidays');
     const addResult = holidaysDB && (await holidaysDB.asyncInsert(holidaysData));
-    return addResult && { status: true, value: 'Adding successful!' };
+    return addResult && { status: true, message: 'The public holidays were added!', value: addResult };
   },
 
   ADD_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID: async (
