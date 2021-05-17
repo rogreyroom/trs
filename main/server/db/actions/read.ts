@@ -15,9 +15,9 @@ const readDatabases = {
     return eesData;
   },
 
-  GET_EES_DATA_BY_ID: async (id: string): Promise<IEes> => {
+  GET_EES_DATA_BY_SYMBOL: async (theSymbol: string): Promise<IEes> => {
     const eesDB: AsyncNedb<IEes> = await getDbConnection('ees');
-    const eesData: IEes = await eesDB.asyncFindOne({ _id: id });
+    const eesData: IEes = await eesDB.asyncFindOne({ symbol: theSymbol });
     return eesData;
   },
 
