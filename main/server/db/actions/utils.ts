@@ -1,10 +1,23 @@
-import { IDate, IDateRange, IDbOperationResult, IEmployeesData, IMonthData, IMonthRates, IYearData } from './_types';
+import {
+  IDate,
+  IDateRange,
+  IDbOperationResult,
+  IEes,
+  IEmployeesData,
+  IMonthData,
+  IMonthRates,
+  IYearData,
+} from './_types';
 import readDatabases from './read';
 
 export interface ICheckEmployeeInput {
   id?: string;
   name?: string;
   surname?: string;
+}
+export interface ICheckEesInput {
+  id?: string;
+  symbol?: string;
 }
 
 export const checkEmployeeExist = async (employeeInput: ICheckEmployeeInput): Promise<IDbOperationResult> => {
@@ -133,4 +146,11 @@ export const makeCalendar = (year: number, ratesData: IMonthRates): IYearData =>
     year,
     months: monthsArray,
   };
+};
+
+export const checkEesExist = async (eesInput: ICheckEesInput): Promise<IDbOperationResult> => {
+  const eesData: IEes = await readDatabases.GET_EES_DATA_BY_SYMBOL(eesInput.symbol);
+
+  if (eesData !== null) return { status: true, message: 'The ees does exist!', value: eesData };
+  return { status: false, message: 'The ees does not exist!', value: null };
 };
