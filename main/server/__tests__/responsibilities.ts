@@ -1,101 +1,78 @@
+import AsyncNedb from 'nedb-async';
 import { IResponsibilities } from '../db/actions/_types';
 import addDatabases from '../db/actions/add';
 import readDatabases from '../db/actions/read';
 import updateDatabases from '../db/actions/update';
+import getDbConnection from '../db/connection';
+
+beforeAll(async () => {
+  const responsibilitiesDB: AsyncNedb<IResponsibilities> = await getDbConnection('responsibilities');
+  await responsibilitiesDB.asyncRemove({}, { multi: true });
+});
 
 beforeEach(() => {
   process.env.NODE_ENV = 'test';
 });
 
-describe('Find responsibilities for given employee id', () => {
-  it('should return empty object if responsibilities for given employee id do not exist', async () => {
-    const responsibilitiesData = await readDatabases.GET_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID('1');
-    expect(responsibilitiesData).toBeNull();
-    expect(responsibilitiesData).not.toEqual(expect.objectContaining({ employee: '1' }));
-  });
-
-  it('should return object with data if responsibilities for given employee id exist', async () => {
-    const responsibilitiesData = await readDatabases.GET_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID('10');
-    expect(responsibilitiesData.employee).toEqual('10');
-    expect(responsibilitiesData).toEqual(expect.objectContaining({ employee: '10' }));
-  });
-});
-
-describe('Add responsibilities for given employee id', () => {
-  const dummyData: IResponsibilities = {
+const randomEmployeeId = Math.random().toString();
+// ADD
+describe('Adding a new employee responsibilities', () => {
+  const addResponsibilitiesData: IResponsibilities = {
     doc: 'responsibilities',
-    employee: '10',
+    employee: randomEmployeeId,
     text:
       'Zakres obowiązków pracownika biurowego\n\n• zajmowanie się dokumentacją, korespondencją oraz prowadzenie terminarza.',
   };
 
-  it('should return status: false and value: Data was not specify!', async () => {
-    const result = await addDatabases.ADD_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID({});
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Data was not specify!');
-  });
-
-  it('should return status: false and value: Employee is required!', async () => {
-    const result = await addDatabases.ADD_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID({ doc: 'responsibilities' });
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Employee is required!');
-  });
-  it('should return status: false and validation error value: Doc name is required', async () => {
-    const result = await addDatabases.ADD_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID({
-      employee: '1',
-      text: 'Some dummy data',
-    });
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Doc name is required');
-  });
-  it('should add responsibilities data and return status: true and value: Adding successful!', async () => {
-    const result = await addDatabases.ADD_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID(dummyData);
-    console.log('result', result);
+  it('it should be successful if responsibilities for given employee does not exists and new responsibilities ware added to DB', async () => {
+    const result = await addDatabases.ADD_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID(addResponsibilitiesData);
+    expect(result.message).toEqual('The responsibilities data was added!');
     expect(result.status).toBeTruthy();
-    expect(result.value).toEqual('Adding successful!');
-  });
-  it('should return status: false and value Data exist! when data for given employee exist in database', async () => {
-    const result = await addDatabases.ADD_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID(dummyData);
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Data exist!');
+    expect(result.value).toEqual(expect.objectContaining({ employee: randomEmployeeId }));
   });
 });
 
-describe('Update responsibilities for given employee id', () => {
-  const dummyData: IResponsibilities = {
+// FIND
+describe('Finding employee responsibilities)', () => {
+  const responsibilitiesEmployeeId = randomEmployeeId;
+
+  it('it should be successful if responsibilitiesData object has doc key equal "responsibilities" and _id equal "responsibilitiesEmployeeId = 111"', async () => {
+    const responsibilitiesData = await readDatabases.GET_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID(
+      responsibilitiesEmployeeId
+    );
+    expect(responsibilitiesData).toEqual(expect.objectContaining({ doc: 'responsibilities' }));
+    expect(responsibilitiesData).toEqual(expect.objectContaining({ employee: randomEmployeeId }));
+  });
+});
+
+// UPDATE
+describe('Updating employee responsibilities', () => {
+  const truthyEesId = randomEmployeeId;
+  const falsyEesId = '333';
+  const updatedResponsibilitiesData: IResponsibilities = {
     doc: 'responsibilities',
-    employee: '10',
-    text: 'Zakres obowiązków Kierownika.',
+    employee: randomEmployeeId,
+    text:
+      'Zakres obowiązków pracownika biurowego\n\n• zajmowanie się dokumentacją, korespondencją oraz prowadzenie terminarza.',
   };
 
-  it('should return status: false and value: Data was not specify!', async () => {
-    const result = await updateDatabases.UPDATE_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID({});
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Data was not specify!');
-  });
-
-  it('should return status: false and value: Employee is required', async () => {
-    const result = await updateDatabases.UPDATE_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID({ doc: 'responsibilities' });
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Employee is required!');
-  });
-  it('should return status: false when data for given employee do not exist in database and value: Employee data do not exist!', async () => {
-    const result = await updateDatabases.UPDATE_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID(dummyData);
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Employee data do not exist!');
-  });
-  it('should return status: false and validation error value: Doc name is required', async () => {
+  it('it should be successful if given responsibilities exists and responsibilities data was updated', async () => {
     const result = await updateDatabases.UPDATE_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID({
-      employee: '10',
-      text: 'Some dummy data',
+      ...updatedResponsibilitiesData,
+      employee: truthyEesId,
     });
-    expect(result.status).toBeFalsy();
-    expect(result.value).toEqual('Doc name is required');
+    expect(result.message).toEqual('The responsibilities data ware updated!');
+    expect(result.status).toBeTruthy();
+    expect(result.value).toEqual(1);
   });
 
-  it('should update responsibilities data and return status: true and value: Update successful!', async () => {
-    const result = await updateDatabases.UPDATE_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID(dummyData);
-    expect(result.status).toBeTruthy();
-    expect(result.value).toEqual('Update successful!');
+  it('it should be unsuccessful if given employee does not exists and responsibilities data was not updated', async () => {
+    const result = await updateDatabases.UPDATE_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID({
+      ...updatedResponsibilitiesData,
+      employee: falsyEesId,
+    });
+    expect(result.message).toEqual('The responsibilities for the given employee does not exist!');
+    expect(result.status).toBeFalsy();
+    expect(result.value).toEqual(null);
   });
 });
