@@ -1,10 +1,6 @@
 import AsyncNedb from 'nedb-async';
 import getDbConnection from '../connection';
-import holidaysSchema from '../schemas/holidaysSchema';
-import responsibilitiesSchema from '../schemas/responsibilitiesSchema';
-import schemaValidator from '../schemas/validator';
 import { IDbOperationResult, IEes, IEmployeesData, IPublicHolidays, IResponsibilities } from './_types';
-import readDatabases from './read';
 import { checkEesExist, checkEmployeeExist, checkHolidaysExist, checkResponsibilitiesExist } from './utils';
 
 const addDatabases = {

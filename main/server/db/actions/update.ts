@@ -1,8 +1,5 @@
 import AsyncNedb from 'nedb-async';
 import getDbConnection from '../connection';
-import eesSchema from '../schemas/eesSchema';
-import responsibilitiesSchema from '../schemas/responsibilitiesSchema';
-import schemaValidator from '../schemas/validator';
 import {
   IEes,
   IDbOperationResult,
@@ -14,7 +11,6 @@ import {
   IQueryFields,
   ITrsData,
 } from './_types';
-import readDatabases from './read';
 import {
   checkEesExist,
   checkEmployeeExist,
