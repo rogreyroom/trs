@@ -36,7 +36,7 @@ describe('Adding a new employee responsibilities', () => {
 describe('Finding employee responsibilities)', () => {
   const responsibilitiesEmployeeId = randomEmployeeId;
 
-  it('it should be successful if responsibilitiesData object has doc key equal "responsibilities" and _id equal "responsibilitiesEmployeeId = 111"', async () => {
+  it('it should be successful if responsibilitiesData object has doc key equal "responsibilities" and employee equal "responsibilitiesEmployeeId"', async () => {
     const responsibilitiesData = await readDatabases.GET_RESPONSIBILITIES_DATA_BY_EMPLOYEE_ID(
       responsibilitiesEmployeeId
     );
