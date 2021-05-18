@@ -1,4 +1,12 @@
-import { IDate, IDateRange, IEmployeesData, IMonthRates } from '../db/actions/_types';
+import AsyncNedb from 'nedb-async';
+import {
+  IDate,
+  IDateRange,
+  IEmployeesData,
+  IMonthRates,
+  IPublicHolidays,
+  IResponsibilities,
+} from '../db/actions/_types';
 import {
   checkEesExist,
   checkEmployeeExist,
@@ -11,6 +19,7 @@ import {
   getCalendarYearIndex,
   makeCalendar,
 } from '../db/actions/utils';
+import getDbConnection from '../db/connection';
 
 beforeEach(() => {
   process.env.NODE_ENV = 'test';
@@ -395,10 +404,13 @@ describe('Check if ees exist', () => {
 });
 
 describe('Check if public holidays exist', () => {
-  const truthyYear = 2021;
   const falsyYear = 2035;
 
   it('should return status true and massage "The public holidays does exist!" if holidays exists in the holidays database when calling with holidays YEAR', async () => {
+    const holidaysDB: AsyncNedb<IPublicHolidays> = await getDbConnection('holidays');
+    const holidaysArray: IPublicHolidays[] = await holidaysDB.asyncFind({});
+    const truthyYear = holidaysArray[0].year;
+
     const result = await checkHolidaysExist(truthyYear);
     expect(result.message).toEqual('The public holidays does exist!');
     expect(result.status).toBeTruthy();
@@ -412,10 +424,12 @@ describe('Check if public holidays exist', () => {
 });
 
 describe('Check if public responsibilities exist', () => {
-  const truthyId = '111';
   const falsyId = '333';
 
   it('should return status true and massage "The responsibilities for the given employee does exist!" if responsibilities exists in the responsibilities database when calling with employee ID', async () => {
+    const responsibilitiesDB: AsyncNedb<IResponsibilities> = await getDbConnection('responsibilities');
+    const responsibilitiesArray: IResponsibilities[] = await responsibilitiesDB.asyncFind({});
+    const truthyId = responsibilitiesArray[0].employee;
     const result = await checkResponsibilitiesExist(truthyId);
     expect(result.message).toEqual('The responsibilities for the given employee does exist!');
     expect(result.status).toBeTruthy();
@@ -424,6 +438,6 @@ describe('Check if public responsibilities exist', () => {
   it('should return status false and massage "The responsibilities does not exist!" if responsibilities do not exists in the responsibilities database when calling with employee ID', async () => {
     const result = await checkResponsibilitiesExist(falsyId);
     expect(result.message).toEqual('The responsibilities for the given employee does not exist!');
-    expect(result.status).toBeTruthy();
+    expect(result.status).toBeFalsy();
   });
 });
