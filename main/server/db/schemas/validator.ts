@@ -13,7 +13,7 @@ import {
   IYearData,
 } from '../actions/_types';
 
-const schemaValidator = (
+const schemaValidator = async (
   schema: Joi.ObjectSchema,
   data:
     | IEes
@@ -25,9 +25,9 @@ const schemaValidator = (
     | IDateRange
     | ITrsData
     | IYearData
-): IDbOperationResult => {
+): Promise<IDbOperationResult> => {
   if (schema && data) {
-    const validationResult: IValidation = schema.validate(data);
+    const validationResult: IValidation = await schema.validate(data);
     if (validationResult.error) {
       return { status: false, message: validationResult.error.message };
     }
