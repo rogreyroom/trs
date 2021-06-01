@@ -1,5 +1,5 @@
 import { AsyncNedb } from 'nedb-async';
-import getDbConnection from '../db/connection';
+import getDbConnection from '../connection';
 
 const db: AsyncNedb<unknown> = getDbConnection('test');
 

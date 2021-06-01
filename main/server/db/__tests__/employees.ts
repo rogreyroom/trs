@@ -1,16 +1,9 @@
 import AsyncNedb from 'nedb-async';
-import {
-  IBasicEmployeeData,
-  IDateRange,
-  IEmployeesData,
-  IMonthRates,
-  IQueryFields,
-  ITrsData,
-} from '../db/actions/_types';
-import addDatabases from '../db/actions/add';
-import readDatabases from '../db/actions/read';
-import updateDatabases from '../db/actions/update';
-import getDbConnection from '../db/connection';
+import { IBasicEmployeeData, IDateRange, IEmployeesData, IMonthRates, IQueryFields, ITrsData } from '../actions/_types';
+import addDatabases from '../actions/add';
+import readDatabases from '../actions/read';
+import updateDatabases from '../actions/update';
+import getDbConnection from '../connection';
 
 beforeAll(async () => {
   const employeesDB: AsyncNedb<IEmployeesData> = await getDbConnection('employees');

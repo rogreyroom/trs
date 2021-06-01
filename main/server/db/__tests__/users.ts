@@ -1,5 +1,5 @@
-import { IUser } from '../db/actions/_types';
-import readDatabases from '../db/actions/read';
+// import { IUser } from '../actions/_types';
+import readDatabases from '../actions/read';
 
 beforeEach(() => {
   process.env.NODE_ENV = 'test';

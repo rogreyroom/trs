@@ -1,9 +1,9 @@
 import AsyncNedb from 'nedb-async';
-import { IEes } from '../db/actions/_types';
-import addDatabases from '../db/actions/add';
-import readDatabases from '../db/actions/read';
-import updateDatabases from '../db/actions/update';
-import getDbConnection from '../db/connection';
+import { IEes } from '../actions/_types';
+import addDatabases from '../actions/add';
+import readDatabases from '../actions/read';
+import updateDatabases from '../actions/update';
+import getDbConnection from '../connection';
 
 beforeAll(async () => {
   const eesDB: AsyncNedb<IEes> = await getDbConnection('ees');

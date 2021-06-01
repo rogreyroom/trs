@@ -1,12 +1,5 @@
 import AsyncNedb from 'nedb-async';
-import {
-  IDate,
-  IDateRange,
-  IEmployeesData,
-  IMonthRates,
-  IPublicHolidays,
-  IResponsibilities,
-} from '../db/actions/_types';
+import { IDate, IDateRange, IEmployeesData, IMonthRates, IPublicHolidays, IResponsibilities } from '../actions/_types';
 import {
   checkEesExist,
   checkEmployeeExist,
@@ -18,8 +11,8 @@ import {
   getCalendarRtsDayIndex,
   getCalendarYearIndex,
   makeCalendar,
-} from '../db/actions/utils';
-import getDbConnection from '../db/connection';
+} from '../actions/utils';
+import getDbConnection from '../connection';
 
 beforeEach(() => {
   process.env.NODE_ENV = 'test';

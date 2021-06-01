@@ -1,8 +1,8 @@
 import AsyncNedb from 'nedb-async';
-import { IPublicHolidays } from '../db/actions/_types';
-import addDatabases from '../db/actions/add';
-import readDatabases from '../db/actions/read';
-import getDbConnection from '../db/connection';
+import { IPublicHolidays } from '../actions/_types';
+import addDatabases from '../actions/add';
+import readDatabases from '../actions/read';
+import getDbConnection from '../connection';
 
 beforeAll(async () => {
   const holidaysDB: AsyncNedb<IPublicHolidays> = await getDbConnection('holidays');

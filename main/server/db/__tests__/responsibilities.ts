@@ -1,9 +1,9 @@
 import AsyncNedb from 'nedb-async';
-import { IResponsibilities } from '../db/actions/_types';
-import addDatabases from '../db/actions/add';
-import readDatabases from '../db/actions/read';
-import updateDatabases from '../db/actions/update';
-import getDbConnection from '../db/connection';
+import { IResponsibilities } from '../actions/_types';
+import addDatabases from '../actions/add';
+import readDatabases from '../actions/read';
+import updateDatabases from '../actions/update';
+import getDbConnection from '../connection';
 
 beforeAll(async () => {
   const responsibilitiesDB: AsyncNedb<IResponsibilities> = await getDbConnection('responsibilities');
