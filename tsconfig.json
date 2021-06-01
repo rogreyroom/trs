@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5", // Specify ECMAScript target version
+    "target": "ES2019", // Specify ECMAScript target version
     "lib": [
       "dom",
       "dom.iterable",
@@ -33,6 +33,10 @@
     "experimentalDecorators": true, /* Enables experimental support for ES7 decorators. */
     "emitDecoratorMetadata": true, /* Enables experimental support for emitting type metadata for decorators. */
   },
+  "typeRoots": [
+    "./node_modules/@types",
+    "./@types",
+  ],
   "include": [
     "next-env.d.ts", "renderer/pages/**/*", "renderer/components/**/*", "renderer/styles/**/*" // *** The files TypeScript should type check ***
   ],
