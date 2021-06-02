@@ -1,5 +1,4 @@
-/* eslint-disable import/prefer-default-export */
-import path from 'path';
+import * as path from 'path';
 import { AsyncNedb } from 'nedb-async';
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
@@ -8,7 +7,9 @@ let dbDirectory: string;
 
 if (isProd) {
   // Win portable directory
-  dbDirectory = path.join(process.env.PORTABLE_EXECUTABLE_DIR, '/db');
+  const winPortablePath: string =
+    process.env.PORTABLE_EXECUTABLE_DIR !== undefined ? process.env.PORTABLE_EXECUTABLE_DIR : '';
+  dbDirectory = path.join(winPortablePath, '/db');
 } else {
   dbDirectory = path.join(process.cwd(), 'resources/db');
 }
