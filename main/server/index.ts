@@ -1,12 +1,12 @@
-import app from './app';
+import http from 'http';
+import app, { port } from './app';
 
-const server = app;
-const port = 3001;
+const server = new http.Server(app);
 
 // starting the server
 server.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server: listening on port ${port}`);
+  console.info(`Server: listening on port ${port}`);
 });
 
 export default server;
