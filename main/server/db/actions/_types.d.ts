@@ -122,3 +122,9 @@ export interface IQueryFields {
   year: number;
   month: number;
 }
+
+export interface IValidatorTestData {
+  doc: string;
+  type: string;
+  symbol: string;
+}
