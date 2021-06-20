@@ -4,7 +4,7 @@ import getDbConnection from '../connection';
 const db: AsyncNedb<unknown> = getDbConnection('test');
 
 interface DataType {
-  test?: string;
+  doc?: string;
   user?: string;
 }
 interface RecordType extends DataType {
@@ -32,14 +32,14 @@ describe('When calling DB for the first time', () => {
 
 describe('When DB have some  data', () => {
   it('should return more then 0 records', async () => {
-    await db.asyncInsert({ test: 'test data' });
+    await db.asyncInsert({ doc: 'test', user: 'John' });
     const records: RecordType[] = await db.asyncFind({});
     expect(records.length).toBeGreaterThan(0);
   });
 });
 
 describe('Inserting records', () => {
-  const dummyData: DataType = { user: 'test' };
+  const dummyData: DataType = { doc: 'test', user: 'Test' };
 
   it('should add 1 record with dummyData', async () => {
     await db.asyncInsert(dummyData);
@@ -56,8 +56,9 @@ describe('Inserting records', () => {
 
   it('should have user equal to "test" on last record', async () => {
     const records: RecordType[] = await db.asyncFind({});
-    const lastRecord: number = records.length - 1;
-    expect(records[lastRecord].test).toEqual('test data');
+    const lastRecord: number = (await records.length) - 1;
+    const lastRecordData: DataType = await records[lastRecord];
+    expect(lastRecordData.user).toEqual('Test');
   });
 });
 
