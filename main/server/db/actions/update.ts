@@ -59,7 +59,7 @@ const updateDatabases = {
     const employeesDB: AsyncNedb<IEmployeesData> = await getDbConnection('employees');
     const updateResult =
       employeesDB && ((await employeesDB.asyncUpdate({ _id: id }, { $set: { ...employeeData } })) as number);
-    return updateResult && { status: true, message: 'The employee basic data was updated!', value: updateResult };
+    return { status: true, message: 'The employee basic data was updated!', value: updateResult };
   },
 
   UPDATE_EMPLOYEE_RATE_DATA_BY_EMPLOYEE_ID_YEAR_MONTH: async (
@@ -100,7 +100,7 @@ const updateDatabases = {
       resultArray.push(updateResult);
     }
     const updateResult = resultArray.every((result) => result === 1) ? 1 : 0;
-    return resultArray && { status: true, message: 'The employee rates data was updated!', value: updateResult };
+    return { status: true, message: 'The employee rates data was updated!', value: updateResult };
   },
 
   CREATE_EMPLOYEE_LEAVE_ENTRY: async (
@@ -125,13 +125,11 @@ const updateDatabases = {
     const employeesDB: AsyncNedb<IEmployeesData> = await getDbConnection('employees');
     const pushData = createLeaveUpdateData(leaveQueryFields.name, yearIndex, monthIndex, employeeData);
     const updateResult = employeesDB && ((await employeesDB.asyncUpdate({ _id: id }, { $push: pushData })) as number);
-    return (
-      updateResult && {
-        status: true,
-        message: `The employee ${leaveQueryFields.name} leave entry was created!`,
-        value: updateResult,
-      }
-    );
+    return {
+      status: true,
+      message: `The employee ${leaveQueryFields.name} leave entry was created!`,
+      value: updateResult,
+    };
   },
 
   REMOVE_EMPLOYEE_LEAVE_ENTRY: async (
@@ -147,13 +145,11 @@ const updateDatabases = {
     const employeesDB: AsyncNedb<IEmployeesData> = await getDbConnection('employees');
     const pullData = createLeaveUpdateData(leaveQueryFields.name, yearIndex, monthIndex, employeeData);
     const updateResult = employeesDB && ((await employeesDB.asyncUpdate({ _id: id }, { $pull: pullData })) as number);
-    return (
-      updateResult && {
-        status: true,
-        message: `The employee ${leaveQueryFields.name} leave entry was removed!`,
-        value: updateResult,
-      }
-    );
+    return {
+      status: true,
+      message: `The employee ${leaveQueryFields.name} leave entry was removed!`,
+      value: updateResult,
+    };
   },
 
   CREATE_UPDATE_EMPLOYEE_TRS_DATA_ENTRY: async (
@@ -179,7 +175,7 @@ const updateDatabases = {
           },
         }
       )) as number);
-    return updateResult && { status: true, message: `The employee trs data was updated!`, value: updateResult };
+    return { status: true, message: `The employee trs data was updated!`, value: updateResult };
   },
 
   CREATE_NEW_YEAR_EMPLOYEE_CALENDAR: async (
@@ -196,7 +192,7 @@ const updateDatabases = {
     const employeesDB: AsyncNedb<IEmployeesData> = await getDbConnection('employees');
     const updateResult =
       employeesDB && ((await employeesDB.asyncUpdate({ _id: id }, { $push: { calendar: newCalendar } })) as number);
-    return updateResult && { status: true, message: `The ${theYear} year data was created!`, value: updateResult };
+    return { status: true, message: `The ${theYear} year data was created!`, value: updateResult };
   },
 };
 
