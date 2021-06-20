@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import addDatabases from '../../db/actions/add';
 import readDatabases from '../../db/actions/read';
 
-const eesResponseHandler = async (request: Request, response: Response): Promise<Response> => {
+const eesResponseHandler = async (request: Request, response: Response): Promise<Response | undefined> => {
   const { method, body } = request;
+  const { locals } = response;
 
   switch (method) {
     case 'GET':
@@ -19,6 +20,9 @@ const eesResponseHandler = async (request: Request, response: Response): Promise
         throw new Error('Internal Sever Error.');
       }
     case 'POST':
+      if (!locals?.validationResult.status) {
+        response.json(locals?.validationResult);
+      }
       try {
         const data = await addDatabases.ADD_EES_DATA(body);
         response.statusCode = 200;

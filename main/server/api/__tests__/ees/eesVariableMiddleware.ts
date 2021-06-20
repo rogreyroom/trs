@@ -21,9 +21,18 @@ beforeEach(() => {
   };
   mockResponse = {
     statusCode: 0,
-    validation: {
-      schema: null,
-      data: null,
+    locals: {
+      validation: {
+        schema: eesSchema,
+        data: {
+          doc: 'ees',
+          type: 'task-oriented',
+          countType: 'auto',
+          symbol: '4H',
+          percent: '25',
+          description: 'Some ees description',
+        },
+      },
     },
   };
 });
@@ -44,7 +53,7 @@ describe('Validate ees', () => {
     await eesVariableMiddleware(mockRequest as Request, mockResponse as Response, mocNext as NextFunction);
 
     expect(mockResponse.statusCode).toBe(expectedStatus);
-    expect(mockResponse.validation.schema).toEqual(expectedSchema);
-    expect(mockResponse.validation.data).toEqual(expectedData);
+    expect(mockResponse.locals?.validation?.schema).toEqual(expectedSchema);
+    expect(mockResponse.locals?.validation?.data).toEqual(expectedData);
   });
 });
