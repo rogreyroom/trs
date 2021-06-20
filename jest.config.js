@@ -8,14 +8,13 @@ module.exports = {
     '<rootDir>/dist',
     '<rootDir>/.history',
   ],
-  moduleDirectories: ['<rootDir>/node_modules', '<rootDir>/components', '<rootDir>/pages'],
   moduleNameMapper: {
     '@components/(.*)': '<rootDir>/components/$1',
     '@pages/(.*)': '<rootDir>/pages/$1',
     '@styles/(.*)': '<rootDir>/styles/$1',
   },
   coverageDirectory: 'coverage',
-  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', 'pages/**/*.{js,jsx,ts,tsx}'],
+  collectCoverageFrom: ['pages/**/*.{js,jsx,ts,tsx}'],
   coverageThreshold: {
     global: {
       branches: 0,
