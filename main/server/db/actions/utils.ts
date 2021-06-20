@@ -23,9 +23,14 @@ export interface ICheckEesInput {
 export const checkEmployeeExist = async (employeeInput: ICheckEmployeeInput): Promise<IDbOperationResult> => {
   let employeeData: IEmployeesData;
   if ({}.hasOwnProperty.call(employeeInput, 'id')) {
-    employeeData = await readDatabases.GET_EMPLOYEE_DATA_BY_ID(employeeInput.id);
+    const { id } = employeeInput;
+    if (id === undefined) return { status: false, message: 'The employee does not exist!', value: null };
+    employeeData = await readDatabases.GET_EMPLOYEE_DATA_BY_ID(id);
   } else {
-    employeeData = await readDatabases.GET_EMPLOYEE_DATA_BY_NAME(employeeInput.name, employeeInput.surname);
+    const { name, surname } = employeeInput;
+    if (name === undefined || surname === undefined)
+      return { status: false, message: 'The employee does not exist!', value: null };
+    employeeData = await readDatabases.GET_EMPLOYEE_DATA_BY_NAME(name, surname);
   }
 
   if (employeeData !== null) return { status: true, message: 'The employee does exist!', value: employeeData };
@@ -149,7 +154,9 @@ export const makeCalendar = (year: number, ratesData: IMonthRates): IYearData =>
 };
 
 export const checkEesExist = async (eesInput: ICheckEesInput): Promise<IDbOperationResult> => {
-  const eesData: IEes = await readDatabases.GET_EES_DATA_BY_SYMBOL(eesInput.symbol);
+  const { symbol } = eesInput;
+  if (symbol === undefined) return { status: false, message: 'The ees does not exist!', value: null };
+  const eesData: IEes = await readDatabases.GET_EES_DATA_BY_SYMBOL(symbol);
 
   if (eesData !== null) return { status: true, message: 'The ees does exist!', value: eesData };
   return { status: false, message: 'The ees does not exist!', value: null };
