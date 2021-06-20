@@ -11,11 +11,12 @@ import {
   IDateRange,
   ITrsData,
   IYearData,
+  IValidatorTestData,
 } from '../actions/_types';
 
 const schemaValidator = async (
-  schema: Joi.ObjectSchema,
-  data:
+  schema?: Joi.ObjectSchema<any>,
+  data?:
     | IEes
     | IPublicHolidays
     | IResponsibilities
@@ -25,6 +26,7 @@ const schemaValidator = async (
     | IDateRange
     | ITrsData
     | IYearData
+    | IValidatorTestData
 ): Promise<IDbOperationResult> => {
   if (schema && data) {
     const validationResult: IValidation = await schema.validate(data);
