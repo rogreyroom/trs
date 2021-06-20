@@ -28,17 +28,13 @@
     "paths": { //alias pathing for absolute paths
       "@components/*": ["renderer/components/*"],
       "@pages/*": ["renderer/pages/*"],
-      "@styles/*": ["renderer/styles/*"]
+      "@styles/*": ["renderer/styles/*"],
     },
     "experimentalDecorators": true, /* Enables experimental support for ES7 decorators. */
     "emitDecoratorMetadata": true, /* Enables experimental support for emitting type metadata for decorators. */
   },
-  "typeRoots": [
-    "./node_modules/@types",
-    "./@types",
-  ],
   "include": [
-    "next-env.d.ts", "renderer/pages/**/*", "renderer/components/**/*", "renderer/styles/**/*" // *** The files TypeScript should type check ***
+    "next-env.d.ts", "main/**/*", "renderer/pages/**/*", "renderer/components/**/*", "renderer/styles/**/*" // *** The files TypeScript should type check ***
   ],
   "exclude": ["node_modules", "coverage"] // *** The files to not type check ***
 }
