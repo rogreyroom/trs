@@ -30,7 +30,6 @@ app.use((_request: Request, response: Response, next: NextFunction) => {
 });
 
 app.use('/api/ees', eesRouter);
-app.use('/api/ees/:symbol', eesRouter);
 
 app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
