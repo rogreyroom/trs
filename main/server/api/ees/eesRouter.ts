@@ -7,5 +7,6 @@ const eesRouter = Router();
 
 eesRouter.get('/', eesResponseHandler);
 eesRouter.post('/', eesVariableMiddleware, validationMiddleware, eesResponseHandler);
+eesRouter.put('/', eesVariableMiddleware, validationMiddleware, eesResponseHandler);
 
 export default eesRouter;
