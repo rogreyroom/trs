@@ -1,14 +1,20 @@
 module.exports = {
+  preset: 'ts-jest',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/coverage', '<rootDir>/dist'],
-  moduleDirectories: ['<rootDir>/node_modules', '<rootDir>/components', '<rootDir>/pages'],
+  testPathIgnorePatterns: [
+    '<rootDir>/.next/',
+    '<rootDir>/node_modules/',
+    '<rootDir>/coverage',
+    '<rootDir>/dist',
+    '<rootDir>/.history',
+  ],
   moduleNameMapper: {
     '@components/(.*)': '<rootDir>/components/$1',
     '@pages/(.*)': '<rootDir>/pages/$1',
     '@styles/(.*)': '<rootDir>/styles/$1',
   },
   coverageDirectory: 'coverage',
-  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', 'pages/**/*.{js,jsx,ts,tsx}'],
+  collectCoverageFrom: ['pages/**/*.{js,jsx,ts,tsx}'],
   coverageThreshold: {
     global: {
       branches: 0,
@@ -17,4 +23,6 @@ module.exports = {
       statements: 0,
     },
   },
+  resetMocks: true,
+  clearMocks: true,
 };

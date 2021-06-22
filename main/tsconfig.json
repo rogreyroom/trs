@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "CommonJS",
+    "rootDir": "./",
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true ,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true },
+    "typeRoots": ["./@types"]
+
+  }
