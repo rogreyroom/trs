@@ -1,11 +1,11 @@
 # TRS - time registration system
 
-It is new attempt to rewrite and refactor of the TRS app _previous version can be found here_(<https://github.com/rogreyroom/trs>)
+It is new attempt to rewrite and refactor of the TRS app _previous version can be found here_(<https://github.com/rogreyroom/trs-app>)
 The main goal is to create the app with the use of typescript and test it with Jest, supertest and testing-library.
 
 ## Application 🚀
 
-Application screenshots for now in the original release: <https://github.com/rogreyroom/trs>
+Application screenshots for now in the original release: <https://github.com/rogreyroom/trs-app>
 
 ## Usage
 

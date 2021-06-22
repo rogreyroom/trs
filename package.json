@@ -1,9 +1,13 @@
 {
   "private": true,
-  "name": "my-nextron-app",
-  "description": "My application description",
-  "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "name": "trs",
+  "description": "It is a project to help some small companies keep employees' work timetable as well as evaluate employees and generate monthly reports.",
+  "version": "1.0.1",
+  "author": "Robert Adamczewski <contact@adamczewski.me>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rogreyroom/trs"
+  },
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
